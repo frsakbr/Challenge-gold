@@ -1,4 +1,5 @@
 const { users: User } = require('../models');
+const users = require('../models');
 
 exports.register = async (req, res) => {
   try {
@@ -26,7 +27,7 @@ exports.register = async (req, res) => {
 
 exports.updatePassword = async (req, res) => {
   try {
-    await User.update({ pass: req.body.password }, {
+    await User.update({ password: req.body.password }, {
       where: {
         id: req.body.id
       }
@@ -46,8 +47,8 @@ exports.updatePassword = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    let user = await User.findAll ({
-      attributes: ['id','name', 'email'],
+    let user = await User.findOne ({
+      attributes: ['id','username', 'email'],
       where: {
         email: req.body.email,
         password: req.body.password

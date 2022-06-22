@@ -1,5 +1,6 @@
 const { items: Item } = require('../models');
 const { Op } = require("sequelize");
+const items = require('../models/items');
 
 class ItemController {
   static async addItem(req, res) {
@@ -9,7 +10,7 @@ class ItemController {
         message: 'parameter name tidak boleh kosong.'
       }
 
-      if (!req.body.Item_price) throw {
+      if (!req.body.item_price) throw {
         status: 400,
         message: 'parameter price tidak boleh kosong.'
       }
@@ -20,7 +21,7 @@ class ItemController {
         item_quantity: req.body.item_quantity
       }
   
-      await items.create(newItem);
+      await Item.create(newItem);
   
       return res.status(201).json({
         message: 'Berhasil menmbahkan item dengan nama ' + newItem.name
@@ -32,26 +33,29 @@ class ItemController {
     }
   }
 
-  static getByID(req, res) {
-    return res.status(200).json({
-      message: 'Berhasil mendapatkan items',
-      data: {
-        id: req.params.id,
-        name: 'Iphone 10',
-        price: 10_000
-      }
-    })
+  static async getByID(req, res) {
+    const id = req.params.id;
+    try {
+      const items = await Item.findByPk(id);
+      return res.status(201).json({
+        message: 'Berhasil mendapatkan item' + id,
+        data: Item
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
+
   static async getAllItem(req, res) {
-    const rows = await items.findAll({
+    const rows = await Item.findAll({
       limit: 10,
       order: [
         ['price']
       ],
       where: {
         price: {
-          [Op.between]: [10_000, 20_000]
+          [Op.between]: [20_000, 40_000]
         }
       }
     });
@@ -63,11 +67,11 @@ class ItemController {
   }
 
   static updateItem(req, res) {
-    const itemID = req.params.id;
+    const id = req.params.id;
     const price = req.body.item_price;
 
     return res.status(200).json({
-      message: 'Berhasil merubah item dengan id ' + itemID,
+      message: 'Berhasil merubah item dengan id ' + id,
       newPrice: price
     })
   }
@@ -91,4 +95,4 @@ class ItemController {
   }
 }
 
-module.exports = itemController;
+module.exports = ItemController;

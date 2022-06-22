@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const itemController = require('../controllers/item.controller');
 
-router.get('/', itemController.getAllItems);
 router.get('/:id', itemController.getByID);
 router.put('/:id', itemController.updateItem);
 router.delete('/:id', itemController.deleteItem);

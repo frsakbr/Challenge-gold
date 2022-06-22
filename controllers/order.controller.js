@@ -1,5 +1,6 @@
 const { orders: OrderModel } = require('../models');
 const { items: ItemModel } = require('../models');
+const { orders: Order } = require('../models');
 
 exports.getAllOrder = (req, res) => {
   return res.status(200).json({
