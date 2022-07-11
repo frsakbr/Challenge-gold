@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "postgres",
-    "password": "postgres",
+    "password": "postgre",
     "database": "ecommerce-binar",
     "host": "localhost",
     "port": "5432",

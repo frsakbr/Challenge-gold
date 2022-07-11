@@ -24,7 +24,7 @@ class ItemController {
       await Item.create(newItem);
   
       return res.status(201).json({
-        message: 'Berhasil menmbahkan item dengan nama ' + newItem.name
+        message: 'Berhasil menmbahkan item dengan nama ' + newItem.item_name
       })
     } catch (err) {
       return res
@@ -36,9 +36,9 @@ class ItemController {
   static async getByID(req, res) {
     const id = req.params.id;
     try {
-      const items = await Item.findByPk(id);
+      const item = await Item.findByPk(id);
       return res.status(201).json({
-        message: 'Berhasil mendapatkan item' + id,
+        message: 'Berhasil mendapatkan item ' + item.item_name,
         data: Item
       });
     } catch (err) {

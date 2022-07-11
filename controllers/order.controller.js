@@ -2,7 +2,7 @@ const { orders: OrderModel } = require('../models');
 const { items: ItemModel } = require('../models');
 const { orders: Order } = require('../models');
 
-exports.getAllOrder = (req, res) => {
+exports.getAllOrders = (req, res) => {
   return res.status(200).json({
     message: 'Berhasil mendapatkan Order'
   })
@@ -16,18 +16,22 @@ exports.getOrder = (req, res) => {
 
 exports.createOrder = async (req, res) => {
   try {
+    const item_id = req.body.item_id;
+    const user_id = req.body.user_id;
+    const order_quantity = req.body.order_quantity;
+
 
     const orderItem = await ItemModel.findOne({
       where: {
-        id: req.body.item_id
+        id: item_id
       }
     });
 
     const newOrder = {
-      user_id: req.body.user_id,
-      item_id: req.body.item_id,
-      order_quantity: req.body.order_quantity,
-      amount: orderItem.dataValues.price * req.body.order_quantity,
+      users_id: user_id,
+      items_id: item_id,
+      order_quantity: order_quantity,
+      amount: orderItem.dataValues.item_price * order_quantity
     }
   
     await OrderModel.create(newOrder);
@@ -42,7 +46,7 @@ exports.createOrder = async (req, res) => {
   }
 }
 
-exports.updateOrder = (req, res) => {
+exports.updateOrder = async (req, res) => {
     try {
         await Order.update({ order_quantity: req.body.order_quantity }, {
           where: {
@@ -62,16 +66,16 @@ exports.updateOrder = (req, res) => {
       }
     }
 
-exports.deleteOrder = (req, res) => {
+exports.deleteOrder = async (req, res) => {
     try {
-        if (!req.body.id) throw { status: 400, message: 'parameter id tidak boleh kosong' };
+        if (!req.params.id) throw { status: 400, message: 'parameter id tidak boleh kosong' };
   
-        await orders.destroy({
-          where: { id: req.body.id }
+        await Order.destroy({
+          where: { id: req.params.id }
         });
   
         return res.status(200).json({
-          message: 'Berhasil menghapus order dengan id ' + req.body.id
+          message: 'Berhasil menghapus order dengan id ' + req.params.id
         })
       } catch (err) {
         return res
